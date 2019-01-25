@@ -62,7 +62,7 @@ def getfileandlabel(filedir):
     indexlist = list(range(len(dirnamelist)))
     return list(zip(dirpathlist, (indexlist))), dict(zip(indexlist, dirnamelist))
     
-pathlabelpair, indextoname = getfileandlabel('/home/hadoop/pythonw/Sunny/cv2+cnn/images/Fab8-Training-Data-2nd-resorting/Known')
+pathlabelpair, indextoname = getfileandlabel('/home/hadoop/....')
 imgsx, imgsy,fname = readData(pathlabelpair)
 imgs=[]
 labels=[]
@@ -94,7 +94,7 @@ y_train=np.array(labels)
 X_val=X_train
 y_val=y_train
 
-pathlabelpair, indextoname = getfileandlabel('/home/hadoop/pythonw/Sunny/cv2+cnn/images/Fab8-Test-answer/known')
+pathlabelpair, indextoname = getfileandlabel('/home/hadoop/....')
 X_test,y_test,fname_test = readData(pathlabelpair)         
 te_imgs_1=[]
 te_labels_1=[]
@@ -147,7 +147,7 @@ def getfileandlabel(filedir):
     indexlist = list(index.repeat(len(dirnamelist)))
     return list(zip(dirpathlist, (indexlist))), dict(zip(indexlist, dirnamelist))
     
-pathlabelpair_un, indextoname_un = getfileandlabel('/home/hadoop/pythonw/Sunny/cv2+cnn/images/Fab8-Test-answer/unknown')
+pathlabelpair_un, indextoname_un = getfileandlabel('/home/hadoop/...')
 
 image13,labels13, fname13 = readData(pathlabelpair_un)
 print(len(labels13))
@@ -264,8 +264,8 @@ def SE_Inception_resnet_v2_1(params):
     tf.app.flags.DEFINE_integer("task_index", 0, "Index of task within the job")
     tf.app.flags.DEFINE_integer("issync", 0, "1: sync,0:async")
 
-    ps_hosts = ["10.224.237.61:2222"]
-    worker_hosts = ["10.224.237.62:2224","10.224.237.63:2224","10.224.237.64:2224"]
+    ps_hosts = ["xx.xxx.xxx.xx1:2222"]
+    worker_hosts = ["xx.xxx.xxx.xx2:2224","xx.xxx.xxx.xx3:2224","xx.xxx.xxx.xx4:2224"]
     cluster = tf.train.ClusterSpec({"ps": ps_hosts, "worker": worker_hosts})
     server = tf.train.Server(cluster,job_name=FLAGS.job_name,task_index=FLAGS.task_index)
 
