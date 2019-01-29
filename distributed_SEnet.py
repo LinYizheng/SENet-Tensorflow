@@ -713,15 +713,15 @@ def SE_Inception_resnet_v2_1(params):
     te_preds=[]
     with sess.as_default():
         for i in xrange(te_labels_1.shape[0]-1):
-            te_1_logits=logits.eval(feed_dict={x: te_imgs_1[i].reshape([-1,image_size,image_size,1]),training_flag: False})
+            te_1_logits=logits.eval(feed_dict={x: te_imgs_1[i].reshape([-1,image_size,image_size]),training_flag: False})
 
-            te_2_logits=logits.eval(feed_dict={x: te_imgs_2[i].reshape([-1,image_size,image_size,1]),training_flag: False})
+            te_2_logits=logits.eval(feed_dict={x: te_imgs_2[i].reshape([-1,image_size,image_size]),training_flag: False})
 
-            te_3_logits=logits.eval(feed_dict={x: te_imgs_3[i].reshape([-1,image_size,image_size,1]),training_flag: False})
+            te_3_logits=logits.eval(feed_dict={x: te_imgs_3[i].reshape([-1,image_size,image_size]),training_flag: False})
 
-            te_4_logits=logits.eval(feed_dict={x: te_imgs_4[i].reshape([-1,image_size,image_size,1]),training_flag: False})
+            te_4_logits=logits.eval(feed_dict={x: te_imgs_4[i].reshape([-1,image_size,image_size]),training_flag: False})
 
-            te_5_logits=logits.eval(feed_dict={x: te_imgs_5[i].reshape([-1,image_size,image_size,1]),training_flag: False})
+            te_5_logits=logits.eval(feed_dict={x: te_imgs_5[i].reshape([-1,image_size,image_size]),training_flag: False})
 
             te_logits =(te_1_logits+te_2_logits+te_3_logits+te_4_logits+te_5_logits)/5
             te_pred = np.argmax(te_logits)
