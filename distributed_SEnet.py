@@ -196,7 +196,7 @@ te_imgs_5=np.array(te_imgs_5)
 te_labels_5=np.array(te_labels_5)
 print(np.array(te_imgs_1).shape,"+++",np.array(te_labels_1).shape)
 print (time.strftime("%Y-%m-%d %H:%M:%S",time.localtime()))
-
+'''
 def trans2tfRecord(imgs,labels,output_dir): 
     filename = output_dir + '.tfrecords'
     writer = tf.python_io.TFRecordWriter(filename)
@@ -227,6 +227,13 @@ def read_tfRecord(file_tfRecord):
     #image = tf.image.per_image_standardization(image)
     label = tf.cast(features['label'], tf.int32)  
     return image,label
+
+    trainroad = trans2tfRecord(X_train.reshape([-1,image_size,image_size,1]),y_train,'img_trans2tfRecord_resort')
+    traindata,trainlabel = read_tfRecord(trainroad)
+    Xtrain_batch,ytrain_batch = tf.train.shuffle_batch([traindata,trainlabel],batch_size=params['batch_size'],
+                                             capacity=1000,min_after_dequeue = 500,num_threads=100,
+                                                       allow_smaller_final_batch=True)  
+													   '''
 
 
 space = {
