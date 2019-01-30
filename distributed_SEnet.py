@@ -20,7 +20,11 @@ import time
 from pyDOE import *
 from sklearn.decomposition import PCA
 import cv2
-from sklearn.metrics import f1_score, accuracy_score
+from sklearn.metrics import f1_score, accuracy_score  
+from tensorflow.contrib.layers import batch_norm, flatten
+from tensorflow.contrib.framework import arg_scope
+import pickle
+import random
 
 def readData(pairpathlabel):
     '''read image to list'''
@@ -62,7 +66,7 @@ def getfileandlabel(filedir):
     indexlist = list(range(len(dirnamelist)))
     return list(zip(dirpathlist, (indexlist))), dict(zip(indexlist, dirnamelist))
     
-pathlabelpair, indextoname = getfileandlabel('/home/hadoop/....')
+pathlabelpair, indextoname = getfileandlabel('/home/hadoop/...')
 imgsx, imgsy,fname = readData(pathlabelpair)
 imgs=[]
 labels=[]
@@ -91,10 +95,16 @@ print(img.shape)
 print(np.array(imgs).shape,"+++",np.array(labels).shape)
 X_train=np.array(imgs)
 y_train=np.array(labels)
+
+index = [i for i in range(len(y_train))]    
+random.shuffle(index)   
+X_train = X_train[index]  
+y_train = y_train[index] 
+
 X_val=X_train
 y_val=y_train
 
-pathlabelpair, indextoname = getfileandlabel('/home/hadoop/....')
+pathlabelpair, indextoname = getfileandlabel('/home/hadoop/...')
 X_test,y_test,fname_test = readData(pathlabelpair)         
 te_imgs_1=[]
 te_labels_1=[]
@@ -227,18 +237,7 @@ space = {
     'batch_size' : hp.choice('batch_size', range(64,257))
        }
 def SE_Inception_resnet_v2_1(params):
-    import tensorflow as tf
-    #from tflearn.layers.conv import global_avg_pool
-    from tensorflow.contrib.layers import batch_norm, flatten
-    from tensorflow.contrib.framework import arg_scope
-    #from cifar10 import *
-    import numpy as np
-    import os
-    import sys
-    import time
-    import pickle
-    import random
-   
+	
     #os.environ['CUDA_VISIBLE_DEVICES']='0'
     #config = tf.ConfigProto()
     #config.gpu_options.allow_growth = True
@@ -585,7 +584,8 @@ def SE_Inception_resnet_v2_1(params):
     min_fraction_of_examples_in_queue = 0.4
     min_queue_examples = int(y_train.shape[0] * min_fraction_of_examples_in_queue)
     input_queue=tf.train.slice_input_producer([X_train,y_train],shuffle=True)
-    Xtrain_batch,ytrain_batch = tf.train.batch(input_queue,batch_size=params['batch_size'],num_threads=100,capacity=min_queue_examples + 3 * params['batch_size'])  
+    Xtrain_batch,ytrain_batch = tf.train.batch(input_queue,batch_size=params['batch_size'],num_threads=100,
+                                               capacity=min_queue_examples + 3 * params['batch_size'],allow_smaller_final_batch=True)  
     
     print (time.strftime("%Y-%m-%d %H:%M:%S",time.localtime()))
     
@@ -599,8 +599,7 @@ def SE_Inception_resnet_v2_1(params):
         f.write(line)    
     epochs = 200
     train_num_examples=y_train.shape[0]
-    max_steps = int(math.ceil(train_num_examples / batch_size))
-    total_sample_train = max_steps * batch_size
+    max_steps = int(math.ceil(train_num_examples / batch_size)+1)
     best = 0
     min_val_loss = 2
     wait = 0  #counter for patience
